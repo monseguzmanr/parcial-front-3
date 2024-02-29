@@ -1,35 +1,72 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
+import { Card } from './components/Card';
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [nombre, setNombre] = useState('');
+  const [animal, setAnimal] = useState('');
+  const [mostrarCard, setMostrarCard] = useState(false);
+  const [mensaje, setMensajeError] = useState(false);
+
+  const onChangeNombre = (e) => setNombre(e.target.value);
+  const onChangeAnimal = (e) => setAnimal(e.target.value);
+
+  const isValidNombre = (name) => {
+    let inValid = /\s/;
+    return name.trim().length > 2 && !inValid.test(name);
+  };
+
+  const isValidAnimal = (animal) => {
+    return animal.trim().length > 5;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isValidNombre(nombre) && isValidAnimal(animal)) {
+      setMostrarCard(true);
+      setMensajeError(false);
+    } else {
+      setMostrarCard(false);
+      setMensajeError(true);
+    }
+  };
 
   return (
-    <>
+    
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        
+        <h1>Parcial Front-end 3 - Monserrat Guzman</h1>
+        <div class="formulario">
+          <form onSubmit={handleSubmit}>
+
+          <label>
+            Nombre:
+            <input type="text" placeholder='Ingresa tu nombre' value={nombre} onChange={onChangeNombre}/>
+          </label>
+
+          <label>
+            Animal Favorito:
+            <input type="text" value={animal} placeholder="Animal favorito" onChange={onChangeAnimal}/>
+          </label>
+
+          <button type='submit'>Submit</button>
+          </form>
+        </div>
+
+
+
+        {mensaje && (
+          <p style={{ color: 'red' }}>
+            Por favor chequea que la información sea correcta
+          </p>
+        )}
+
+        {mostrarCard && <Card nombre={nombre} animal={animal} />}
+      
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+  );
 }
 
-export default App
+export default App;
